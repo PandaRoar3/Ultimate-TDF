@@ -1,8 +1,4 @@
--- Teleport to crate room
-while true do
-    game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(Vector3.new(-87.970, 23.299, 255.118)))
-    wait(1)
-end
+
 
 -- Auto Skip Wave
 while true do
