@@ -1,11 +1,3 @@
-
-
--- Auto Skip Wave
-while true do
-    game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("GlobalInit"):WaitForChild("RemoteEvents"):WaitForChild("PlayerReadyForNextWave"):FireServer() 
-    wait(1)
-end
-
 local function placeTowers(towerType, positions)
     for _, position in ipairs(positions) do
         game:GetService("ReplicatedStorage").GenericModules.Service.Network.PlayerPlaceTower:FireServer(towerType, position)
@@ -13,34 +5,6 @@ local function placeTowers(towerType, positions)
     end
 end
 
-local function upgradeAllTowers()
-    local maxUpgradeLevel = 5 -- ระดับ max ที่ต้องการ
-
-    local towers = game:GetService("Workspace").TowerContainer:GetChildren()
-
-    for _, tower in ipairs(towers) do
-        local towerUpgradeLevel = tower:FindFirstChild("UpgradeLevel")
-
-        if towerUpgradeLevel then
-            -- ตรวจสอบว่าระดับอัพเกรดยังไม่ถึง max
-            while towerUpgradeLevel.Value < maxUpgradeLevel do
-                local args = {
-                    [1] = tostring(towerUpgradeLevel.Value + 1)
-                }
-
-                game:GetService("ReplicatedStorage")
-                    :WaitForChild("GenericModules")
-                    :WaitForChild("Service")
-                    :WaitForChild("Network")
-                    :WaitForChild("PlayerUpgradeTower"):FireServer(unpack(args))
-
-                wait(0.1) -- รอสักครู่ก่อนที่จะอัพเกรดต่อ
-            end
-        end
-    end
-end
-
--- วนลูปการวางทาวเวอร์และอัพเกรด
 while true do
     local towerPositions1 = {
         Vector3.new(-680.796, 83.936, -251.311),
@@ -84,9 +48,6 @@ while true do
     placeTowers(towerType2, towerPositions2)
     placeTowers(towerType3, towerPositions3)
     placeTowers(towerType4, towerPositions4)
-
-    -- อัพเกรดทาวเวอร์
-    upgradeAllTowers()
 
     wait(5)
 end
