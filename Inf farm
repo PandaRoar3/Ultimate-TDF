@@ -1,0 +1,96 @@
+-- Teleport to crate room
+while true do
+    game.Players.LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(Vector3.new(-87.970, 23.299, 255.118)))
+    wait(1)
+end
+
+-- Auto Skip Wave
+while true do
+    game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("GlobalInit"):WaitForChild("RemoteEvents"):WaitForChild("PlayerReadyForNextWave"):FireServer() 
+    wait(1)
+end
+
+local function placeTowers(towerType, positions)
+    for _, position in ipairs(positions) do
+        game:GetService("ReplicatedStorage").GenericModules.Service.Network.PlayerPlaceTower:FireServer(towerType, position)
+        wait(0.1)
+    end
+end
+
+local function upgradeAllTowers()
+    local maxUpgradeLevel = 5 -- ระดับ max ที่ต้องการ
+
+    local towers = game:GetService("Workspace").TowerContainer:GetChildren()
+
+    for _, tower in ipairs(towers) do
+        local towerUpgradeLevel = tower:FindFirstChild("UpgradeLevel")
+
+        if towerUpgradeLevel then
+            -- ตรวจสอบว่าระดับอัพเกรดยังไม่ถึง max
+            while towerUpgradeLevel.Value < maxUpgradeLevel do
+                local args = {
+                    [1] = tostring(towerUpgradeLevel.Value + 1)
+                }
+
+                game:GetService("ReplicatedStorage")
+                    :WaitForChild("GenericModules")
+                    :WaitForChild("Service")
+                    :WaitForChild("Network")
+                    :WaitForChild("PlayerUpgradeTower"):FireServer(unpack(args))
+
+                wait(0.1) -- รอสักครู่ก่อนที่จะอัพเกรดต่อ
+            end
+        end
+    end
+end
+
+-- วนลูปการวางทาวเวอร์และอัพเกรด
+while true do
+    local towerPositions1 = {
+        Vector3.new(-680.796, 83.936, -251.311),
+        Vector3.new(-680.796, 83.936, -253.311),
+        Vector3.new(-680.796, 83.936, -255.311),
+        Vector3.new(-680.796, 83.936, -257.311),
+        Vector3.new(-680.796, 83.936, -259.311)
+    }
+
+    local towerPositions2 = {
+        Vector3.new(-691.520, 83.936, -260.537),
+        Vector3.new(-691.520, 83.936, -262.537),
+        Vector3.new(-691.520, 83.936, -264.537),
+        Vector3.new(-691.520, 83.936, -266.537),
+        Vector3.new(-691.520, 83.936, -268.537)
+    }
+
+    local towerPositions3 = {
+        Vector3.new(-683.796, 83.936, -251.311),
+        Vector3.new(-683.796, 83.936, -253.311),
+        Vector3.new(-683.796, 83.936, -255.311),
+        Vector3.new(-683.796, 83.936, -257.311),
+        Vector3.new(-683.796, 83.936, -259.311)
+    }
+
+    local towerPositions4 = {
+        Vector3.new(-678.796, 83.936, -251.311),
+        Vector3.new(-678.796, 83.936, -253.311),
+        Vector3.new(-678.796, 83.936, -255.311),
+        Vector3.new(-678.796, 83.936, -257.311),
+        Vector3.new(-678.796, 83.936, -259.311)
+    }
+
+    local towerType1 = "1457512412:9"  -- leafy
+    local towerType2 = "1457512412:28" -- moneyfarm
+    local towerType3 = "1457512412:58" -- soif
+    local towerType4 = "1457512412:10" -- saitama
+
+    -- วางทาวเวอร์
+    placeTowers(towerType1, towerPositions1)
+    placeTowers(towerType2, towerPositions2)
+    placeTowers(towerType3, towerPositions3)
+    placeTowers(towerType4, towerPositions4)
+
+    -- อัพเกรดทาวเวอร์
+    upgradeAllTowers()
+
+    wait(5)
+end
